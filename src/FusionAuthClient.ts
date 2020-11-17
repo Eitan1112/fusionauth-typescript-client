@@ -360,6 +360,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a messenger.  You can optionally specify an Id for the messenger, if not provided one will be generated.
+   *
+   * @param {UUID} messengerId (Optional) The Id for the messenger. If not provided a secure random UUID will be generated.
+   * @param {MessengerRequest} request The request object that contains all of the information used to create the messenger.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  createMessenger(messengerId: UUID, request: MessengerRequest): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
    *
    * @param {UUID} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -721,6 +737,20 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the messenger for the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteMessenger(messengerId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
         .withMethod("DELETE")
         .go();
   }
@@ -1477,6 +1507,22 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the messenger with the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger to update.
+   * @param {MessengerRequest} request The request that contains just the new messenger information.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  patchMessenger(messengerId: UUID, request: MessengerRequest): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
         .withJSONBody(request)
         .withMethod("PATCH")
         .go();
@@ -2311,6 +2357,32 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the messenger with the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  retrieveMessenger(messengerId: UUID): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, void>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the messenger.
+   *
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  retrieveMessenger(): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, void>()
+        .withUri('/api/messenger')
         .withMethod("GET")
         .go();
   }
@@ -3293,6 +3365,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the messenger with the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger to update.
+   * @param {MessengerRequest} request The request object that contains all of the new messenger information.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  updateMessenger(messengerId: UUID, request: MessengerRequest): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the registration for the user with the given id and the application defined in the request.
    *
    * @param {UUID} userId The Id of the user whose registration is going to be updated.
@@ -3868,6 +3956,19 @@ export interface BaseLoginRequest {
 }
 
 /**
+ * @author Brett Guy
+ */
+export interface BaseMessengerConfiguration {
+  data?: Record<string, any>;
+  debug?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  type?: MessengerType;
+}
+
+/**
  * @author Brian Pontarelli
  */
 export interface BaseSearchCriteria {
@@ -4200,6 +4301,19 @@ export interface EmailConfiguration {
   verificationEmailTemplateId?: UUID;
   verifyEmail?: boolean;
   verifyEmailWhenChanged?: boolean;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface EmailMessengerConfiguration extends BaseMessengerConfiguration {
+  defaultFromEmail?: string;
+  defaultFromName?: string;
+  host?: string;
+  password?: string;
+  port?: number;
+  security?: EmailSecurityType;
+  username?: string;
 }
 
 export interface EmailPlus extends Enableable {
@@ -5496,6 +5610,31 @@ export interface MemberResponse {
   members?: Record<UUID, Array<GroupMember>>;
 }
 
+/**
+ * @author Brett Guy
+ */
+export interface MessengerRequest {
+  messenger?: BaseMessengerConfiguration;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface MessengerResponse {
+  messenger?: BaseMessengerConfiguration;
+  messengers?: Array<BaseMessengerConfiguration>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum MessengerType {
+  Generic = "Generic",
+  REST = "REST",
+  Twilio = "Twilio",
+  Email = "Email"
+}
+
 export interface MetaData {
   device?: DeviceInfo;
   scopes?: Array<string>;
@@ -6373,6 +6512,17 @@ export enum TransactionType {
  */
 export interface TwilioConfiguration extends Enableable {
   accountSID?: string;
+  authToken?: string;
+  fromPhoneNumber?: string;
+  messagingServiceSid?: string;
+  url?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TwilioMessengerConfiguration extends BaseMessengerConfiguration {
+  accountSid?: string;
   authToken?: string;
   fromPhoneNumber?: string;
   messagingServiceSid?: string;
