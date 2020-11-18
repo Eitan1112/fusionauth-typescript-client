@@ -2376,11 +2376,11 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the messenger.
+   * Retrieves all of the messengers.
    *
    * @returns {Promise<ClientResponse<MessengerResponse>>}
    */
-  retrieveMessenger(): Promise<ClientResponse<MessengerResponse>> {
+  retrieveMessengers(): Promise<ClientResponse<MessengerResponse>> {
     return this.start<MessengerResponse, void>()
         .withUri('/api/messenger')
         .withMethod("GET")
@@ -6522,7 +6522,7 @@ export interface TwilioConfiguration extends Enableable {
  * @author Brett Guy
  */
 export interface TwilioMessengerConfiguration extends BaseMessengerConfiguration {
-  accountSid?: string;
+  accountSID?: string;
   authToken?: string;
   fromPhoneNumber?: string;
   messagingServiceSid?: string;
