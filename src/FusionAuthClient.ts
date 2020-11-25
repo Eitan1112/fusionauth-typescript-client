@@ -5104,7 +5104,6 @@ export interface IntegrationResponse {
 export interface Integrations {
   cleanspeak?: CleanSpeakConfiguration;
   kafka?: KafkaConfiguration;
-  twilio?: TwilioConfiguration;
 }
 
 /**
@@ -6503,19 +6502,6 @@ export enum TransactionType {
   SimpleMajority = "SimpleMajority",
   SuperMajority = "SuperMajority",
   AbsoluteMajority = "AbsoluteMajority"
-}
-
-/**
- * Twilio Service Configuration.
- *
- * @author Daniel DeGroff
- */
-export interface TwilioConfiguration extends Enableable {
-  accountSID?: string;
-  authToken?: string;
-  fromPhoneNumber?: string;
-  messagingServiceSid?: string;
-  url?: string;
 }
 
 /**
