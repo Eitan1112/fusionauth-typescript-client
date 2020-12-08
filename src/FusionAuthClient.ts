@@ -360,6 +360,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates an message template. You can optionally specify an Id for the template, if not provided one will be generated.
+   *
+   * @param {UUID} messageTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
+   * @param {MessageTemplateRequest} request The request object that contains all of the information used to create the message template.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  createMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a messenger.  You can optionally specify an Id for the messenger, if not provided one will be generated.
    *
    * @param {UUID} messengerId (Optional) The Id for the messenger. If not provided a secure random UUID will be generated.
@@ -737,6 +753,20 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the message template for the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteMessageTemplate(messageTemplateId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
         .withMethod("DELETE")
         .go();
   }
@@ -1507,6 +1537,22 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the message template with the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to update.
+   * @param {MessageTemplateRequest} request The request that contains just the new message template information.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  patchMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
         .withJSONBody(request)
         .withMethod("PATCH")
         .go();
@@ -2357,6 +2403,46 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the message template for the given Id. If you don't specify the id, this will return all of the message templates.
+   *
+   * @param {UUID} messageTemplateId (Optional) The Id of the message template.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  retrieveMessageTemplate(messageTemplateId: UUID): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, void>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Creates a preview of the message template provided in the request, normalized to a given locale.
+   *
+   * @param {PreviewMessageTemplateRequest} request The request that contains the email template and optionally a locale to render it in.
+   * @returns {Promise<ClientResponse<PreviewMessageTemplateResponse>>}
+   */
+  retrieveMessageTemplatePreview(request: PreviewMessageTemplateRequest): Promise<ClientResponse<PreviewMessageTemplateResponse>> {
+    return this.start<PreviewMessageTemplateResponse, Errors>()
+        .withUri('/api/message/template/preview')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the message templates.
+   *
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  retrieveMessageTemplates(): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, void>()
+        .withUri('/api/message/template')
         .withMethod("GET")
         .go();
   }
@@ -3365,6 +3451,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the message template with the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to update.
+   * @param {MessageTemplateRequest} request The request that contains all of the new message template information.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  updateMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the messenger with the given Id.
    *
    * @param {UUID} messengerId The Id of the messenger to update.
@@ -3683,9 +3785,6 @@ export enum Algorithm {
   HS256 = "HS256",
   HS384 = "HS384",
   HS512 = "HS512",
-  PS256 = "PS256",
-  PS384 = "PS384",
-  PS512 = "PS512",
   RS256 = "RS256",
   RS384 = "RS384",
   RS512 = "RS512",
@@ -5610,6 +5709,43 @@ export interface MemberResponse {
 }
 
 /**
+ * An incredible simplified view of a message
+ *
+ * @author Michael Sleevi
+ */
+export interface Message {
+  text?: string;
+}
+
+/**
+ * Stores an message template used to distribute messages;
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplate {
+  defaultTemplate?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  localizedTemplates?: LocalizedStrings;
+  name?: string;
+}
+
+/**
+ * A Message Template Request to the API
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateRequest {
+  messageTemplate?: MessageTemplate;
+}
+
+export interface MessageTemplateResponse {
+  messageTemplate?: MessageTemplate;
+  messageTemplates?: Array<MessageTemplate>;
+}
+
+/**
  * @author Brett Guy
  */
 export interface MessengerRequest {
@@ -5909,6 +6045,19 @@ export interface PasswordValidationRulesResponse {
  */
 export interface PendingResponse {
   users?: Array<User>;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface PreviewMessageTemplateRequest {
+  locale?: string;
+  messageTemplate?: MessageTemplate;
+}
+
+export interface PreviewMessageTemplateResponse {
+  errors?: Errors;
+  message?: Message;
 }
 
 /**
