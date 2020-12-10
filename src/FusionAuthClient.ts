@@ -4957,6 +4957,13 @@ export interface GenericConnectorConfiguration extends BaseConnectorConfiguratio
 }
 
 /**
+ * @author Brett Guy
+ */
+export interface GenericMessengerConfiguration extends BaseMessengerConfiguration {
+  url?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface GoogleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
@@ -5452,13 +5459,13 @@ export interface Lambda extends Enableable {
 }
 
 export interface LambdaConfiguration {
-  accessTokenPopulateId?: UUID;
-  idTokenPopulateId?: UUID;
-  samlv2PopulateId?: UUID;
+  reconcileId?: UUID;
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
+  accessTokenPopulateId?: UUID;
+  idTokenPopulateId?: UUID;
+  samlv2PopulateId?: UUID;
 }
 
 export interface LambdaConfiguration {
@@ -5765,7 +5772,6 @@ export interface MessengerResponse {
  */
 export enum MessengerType {
   Generic = "Generic",
-  REST = "REST",
   Twilio = "Twilio",
   Email = "Email"
 }
