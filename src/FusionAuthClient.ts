@@ -4071,9 +4071,7 @@ export interface BaseLoginRequest {
   noJWT?: boolean;
 }
 
-/**
- * @author Brett Guy
- */
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseMessengerConfiguration {
   data?: Record<string, any>;
   debug?: boolean;
@@ -4419,9 +4417,7 @@ export interface EmailConfiguration {
   verifyEmailWhenChanged?: boolean;
 }
 
-/**
- * @author Brett Guy
- */
+// thinking?
 export interface EmailMessengerConfiguration extends BaseMessengerConfiguration {
   defaultFromEmail?: string;
   defaultFromName?: string;
@@ -5764,6 +5760,9 @@ export interface MessageTemplateRequest {
   messageTemplate?: MessageTemplate;
 }
 
+/**
+ * @author Michael Sleevi
+ */
 export interface MessageTemplateResponse {
   messageTemplate?: MessageTemplate;
   messageTemplates?: Array<MessageTemplate>;
@@ -6087,6 +6086,9 @@ export interface PreviewMessageTemplateRequest {
   messageTemplate?: MessageTemplate;
 }
 
+/**
+ * @author Michael Sleevi
+ */
 export interface PreviewMessageTemplateResponse {
   errors?: Errors;
   message?: Message;
