@@ -4417,6 +4417,30 @@ export interface EmailConfiguration {
   verifyEmailWhenChanged?: boolean;
 }
 
+export interface EmailMessage {
+  attachments?: Array<Attachment>;
+  bcc?: Array<EmailAddress>;
+  cc?: Array<EmailAddress>;
+  from?: EmailAddress;
+  html?: string;
+  replyTo?: EmailAddress;
+  subject?: string;
+  text?: string;
+  to?: Array<EmailAddress>;
+}
+
+export interface EmailMessageTemplate extends MessageTemplate {
+  defaultFromName?: string;
+  defaultHtmlTemplate?: string;
+  defaultSubject?: string;
+  defaultTextTemplate?: string;
+  fromEmail?: string;
+  localizedFromNames?: LocalizedStrings;
+  localizedHtmlTemplates?: LocalizedStrings;
+  localizedSubjects?: LocalizedStrings;
+  localizedTextTemplates?: LocalizedStrings;
+}
+
 // thinking?
 export interface EmailMessengerConfiguration extends BaseMessengerConfiguration {
   defaultFromEmail?: string;
@@ -5472,13 +5496,13 @@ export interface Lambda extends Enableable {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 export interface LambdaConfiguration {
@@ -5728,13 +5752,7 @@ export interface MemberResponse {
   members?: Record<UUID, Array<GroupMember>>;
 }
 
-/**
- * An incredible simplified view of a message
- *
- * @author Michael Sleevi
- */
 export interface Message {
-  text?: string;
 }
 
 /**
@@ -5743,12 +5761,12 @@ export interface Message {
  * @author Michael Sleevi
  */
 export interface MessageTemplate {
-  defaultTemplate?: string;
+  data?: Record<string, any>;
   id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
-  localizedTemplates?: LocalizedStrings;
   name?: string;
+  type?: MessageType;
 }
 
 /**
@@ -5766,6 +5784,11 @@ export interface MessageTemplateRequest {
 export interface MessageTemplateResponse {
   messageTemplate?: MessageTemplate;
   messageTemplates?: Array<MessageTemplate>;
+}
+
+export enum MessageType {
+  SMS = "SMS",
+  Email = "Email"
 }
 
 /**
@@ -6430,6 +6453,19 @@ export interface SendRequest {
  */
 export interface SendResponse {
   results?: Record<UUID, EmailTemplateErrors>;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface SMSMessage {
+  phoneNumber?: string;
+  textMessage?: string;
+}
+
+export interface SMSMessageTemplate extends MessageTemplate {
+  defaultTemplate?: string;
+  localizedTemplates?: LocalizedStrings;
 }
 
 /**
