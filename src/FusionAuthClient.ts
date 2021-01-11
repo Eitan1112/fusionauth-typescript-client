@@ -5837,6 +5837,18 @@ export interface MonthlyActiveUserReportResponse {
   total?: number;
 }
 
+export interface MultiFactorConfiguration {
+  availableTypes?: Array<MessageType>;
+  currentTypes?: Array<MessageType>;
+  templates?: Array<MultiFactorTypeConfiguration>;
+}
+
+export interface MultiFactorTypeConfiguration {
+  messengerId?: UUID;
+  templateId?: UUID;
+  type?: MessageType;
+}
+
 /**
  * Helper methods for normalizing values.
  *
@@ -6581,6 +6593,7 @@ export interface Tenant {
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
   minimumPasswordAge?: MinimumPasswordAge;
+  multiFactorConfiguration?: MultiFactorConfiguration;
   name?: string;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
