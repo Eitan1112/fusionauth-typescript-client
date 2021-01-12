@@ -6546,10 +6546,12 @@ export interface SystemLogsExportRequest extends BaseExportRequest {
 }
 
 export interface Templates {
+  accountIndex?: string;
   emailComplete?: string;
   emailSend?: string;
   emailVerify?: string;
   helpers?: string;
+  index?: string;
   oauth2Authorize?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
