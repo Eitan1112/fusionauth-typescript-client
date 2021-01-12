@@ -5496,13 +5496,13 @@ export interface Lambda extends Enableable {
 }
 
 export interface LambdaConfiguration {
-  accessTokenPopulateId?: UUID;
-  idTokenPopulateId?: UUID;
-  samlv2PopulateId?: UUID;
+  reconcileId?: UUID;
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
+  accessTokenPopulateId?: UUID;
+  idTokenPopulateId?: UUID;
+  samlv2PopulateId?: UUID;
 }
 
 export interface LambdaConfiguration {
@@ -5838,12 +5838,6 @@ export interface MonthlyActiveUserReportResponse {
 }
 
 export interface MultiFactorConfiguration {
-  availableTypes?: Array<MessageType>;
-  currentTypes?: Array<MessageType>;
-  templates?: Array<MultiFactorTypeConfiguration>;
-}
-
-export interface MultiFactorTypeConfiguration {
   messengerId?: UUID;
   templateId?: UUID;
   type?: MessageType;
@@ -6593,7 +6587,7 @@ export interface Tenant {
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
   minimumPasswordAge?: MinimumPasswordAge;
-  multiFactorConfiguration?: MultiFactorConfiguration;
+  multiFactorConfigurations?: Array<MultiFactorConfiguration>;
   name?: string;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
