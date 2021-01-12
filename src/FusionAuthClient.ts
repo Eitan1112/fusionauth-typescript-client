@@ -4997,6 +4997,12 @@ export interface GenericConnectorConfiguration extends BaseConnectorConfiguratio
  * @author Brett Guy
  */
 export interface GenericMessengerConfiguration extends BaseMessengerConfiguration {
+  connectTimeout?: number;
+  headers?: HTTPHeaders;
+  httpAuthenticationPassword?: string;
+  httpAuthenticationUsername?: string;
+  readTimeout?: number;
+  sslCertificate?: string;
   url?: string;
 }
 
@@ -5409,6 +5415,14 @@ export interface KafkaConfiguration extends Enableable {
 }
 
 /**
+ * @author Brett Guy
+ */
+export interface KafkaMessengerConfiguration extends BaseMessengerConfiguration {
+  defaultTopic?: string;
+  producer?: Record<string, string>;
+}
+
+/**
  * Domain for a public key, key pair or an HMAC secret. This is used by KeyMaster to manage keys for JWTs, SAML, etc.
  *
  * @author Brian Pontarelli
@@ -5812,7 +5826,8 @@ export interface MessengerResponse {
 export enum MessengerType {
   Generic = "Generic",
   Twilio = "Twilio",
-  Email = "Email"
+  Email = "Email",
+  Kafka = "Kafka"
 }
 
 export interface MetaData {
