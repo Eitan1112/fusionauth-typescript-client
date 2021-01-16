@@ -3845,6 +3845,7 @@ export interface Application {
   lambdaConfiguration?: LambdaConfiguration;
   lastUpdateInstant?: number;
   loginConfiguration?: LoginConfiguration;
+  multiFactorConfiguration?: ApplicationMultiFactorConfiguration;
   name?: string;
   oauthConfiguration?: OAuth2Configuration;
   passwordlessConfiguration?: PasswordlessConfiguration;
@@ -3878,6 +3879,12 @@ export interface ApplicationEvent {
  */
 export interface ApplicationFormConfiguration {
   adminRegistrationFormId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationMultiFactorConfiguration extends TenantMultiFactorConfiguration {
 }
 
 /**
@@ -4417,6 +4424,9 @@ export interface EmailConfiguration {
   verifyEmailWhenChanged?: boolean;
 }
 
+/**
+ * @author Mikey Sleevi
+ */
 export interface EmailMessage {
   attachments?: Array<Attachment>;
   bcc?: Array<EmailAddress>;
@@ -4429,6 +4439,9 @@ export interface EmailMessage {
   to?: Array<EmailAddress>;
 }
 
+/**
+ * @author Mikey Sleevi
+ */
 export interface EmailMessageTemplate extends MessageTemplate {
   defaultFromName?: string;
   defaultHtmlTemplate?: string;
@@ -5204,6 +5217,9 @@ export interface IdentityProviderStartLoginResponse {
   code?: string;
 }
 
+/**
+ * @author Daniel DeGroff
+ */
 export enum IdentityProviderType {
   ExternalJWT = "ExternalJWT",
   OpenIDConnect = "OpenIDConnect",
@@ -5788,6 +5804,9 @@ export interface MemberResponse {
   members?: Record<UUID, Array<GroupMember>>;
 }
 
+/**
+ * @author Mikey Sleevi
+ */
 export interface Message {
 }
 
@@ -5822,6 +5841,9 @@ export interface MessageTemplateResponse {
   messageTemplates?: Array<MessageTemplate>;
 }
 
+/**
+ * @author Mikey Sleevi
+ */
 export enum MessageType {
   SMS = "SMS",
   Email = "Email"
@@ -5872,12 +5894,6 @@ export interface MinimumPasswordAge extends Enableable {
 export interface MonthlyActiveUserReportResponse {
   monthlyActiveUsers?: Array<Count>;
   total?: number;
-}
-
-export interface MultiFactorConfiguration {
-  messengerId?: UUID;
-  templateId?: UUID;
-  type?: MessageType;
 }
 
 /**
@@ -6506,6 +6522,9 @@ export interface SMSMessage {
   textMessage?: string;
 }
 
+/**
+ * @author Michael Sleevi
+ */
 export interface SMSMessageTemplate extends MessageTemplate {
   defaultTemplate?: string;
   localizedTemplates?: LocalizedStrings;
@@ -6625,8 +6644,9 @@ export interface Tenant {
   lastUpdateInstant?: number;
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
+  messengerConfiguration?: TenantMessengerConfiguration;
   minimumPasswordAge?: MinimumPasswordAge;
-  multiFactorConfigurations?: Array<MultiFactorConfiguration>;
+  multiFactorConfiguration?: TenantMultiFactorConfiguration;
   name?: string;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
@@ -6646,6 +6666,19 @@ export interface Tenantable {
  */
 export interface TenantFormConfiguration {
   adminUserFormId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantMessengerConfiguration {
+}
+
+/**
+ * @author Mikey Sleevi
+ */
+export interface TenantMultiFactorConfiguration {
+  smsMessageTemplateId?: UUID;
 }
 
 /**
