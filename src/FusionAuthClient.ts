@@ -3879,6 +3879,7 @@ export interface ApplicationEvent {
  */
 export interface ApplicationFormConfiguration {
   adminRegistrationFormId?: UUID;
+  selfServiceUserFormId?: UUID;
 }
 
 /**
@@ -4086,6 +4087,7 @@ export interface BaseMessengerConfiguration {
   insertInstant?: number;
   lastUpdateInstant?: number;
   name?: string;
+  transport?: string;
   type?: MessengerType;
 }
 
@@ -4980,7 +4982,8 @@ export interface FormStep {
 export enum FormType {
   registration = "registration",
   adminRegistration = "adminRegistration",
-  adminUser = "adminUser"
+  adminUser = "adminUser",
+  selfServiceUser = "selfServiceUser"
 }
 
 /**
@@ -6672,6 +6675,7 @@ export interface TenantFormConfiguration {
  * @author Daniel DeGroff
  */
 export interface TenantMessengerConfiguration {
+  transports?: Record<string, UUID>;
 }
 
 /**
@@ -6801,6 +6805,12 @@ export enum TransactionType {
   SimpleMajority = "SimpleMajority",
   SuperMajority = "SuperMajority",
   AbsoluteMajority = "AbsoluteMajority"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface Transport {
 }
 
 /**
