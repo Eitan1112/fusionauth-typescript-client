@@ -6616,6 +6616,7 @@ export interface Templates {
   oauth2Passwordless?: string;
   oauth2Register?: string;
   oauth2TwoFactor?: string;
+  oauth2TwoFactorOptions?: string;
   oauth2Wait?: string;
   passwordChange?: string;
   passwordComplete?: string;
@@ -6805,12 +6806,6 @@ export enum TransactionType {
   SimpleMajority = "SimpleMajority",
   SuperMajority = "SuperMajority",
   AbsoluteMajority = "AbsoluteMajority"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface Transport {
 }
 
 /**
