@@ -4463,6 +4463,7 @@ export interface EmailMessengerConfiguration extends BaseMessengerConfiguration 
   host?: string;
   password?: string;
   port?: number;
+  properties?: string;
   security?: EmailSecurityType;
   username?: string;
 }
@@ -4698,6 +4699,8 @@ export interface ExternalIdentifierConfiguration {
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
   twoFactorIdTimeToLiveInSeconds?: number;
+  twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
+  twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
   twoFactorTrustIdTimeToLiveInSeconds?: number;
 }
 
