@@ -6602,6 +6602,7 @@ export interface SystemLogsExportRequest extends BaseExportRequest {
 }
 
 export interface Templates {
+  accountEdit?: string;
   accountIndex?: string;
   emailComplete?: string;
   emailSend?: string;
@@ -6686,6 +6687,7 @@ export interface TenantMessengerConfiguration {
  * @author Mikey Sleevi
  */
 export interface TenantMultiFactorConfiguration {
+  emailMessageTemplateId?: UUID;
   smsMessageTemplateId?: UUID;
 }
 
