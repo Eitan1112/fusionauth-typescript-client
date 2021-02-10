@@ -3885,7 +3885,9 @@ export interface ApplicationFormConfiguration {
 /**
  * @author Daniel DeGroff
  */
-export interface ApplicationMultiFactorConfiguration extends TenantMultiFactorConfiguration {
+export interface ApplicationMultiFactorConfiguration {
+  email?: MultiFactorEmailTemplate;
+  sms?: MultiFactorSMSTemplate;
 }
 
 /**
@@ -4424,48 +4426,6 @@ export interface EmailConfiguration {
   verificationEmailTemplateId?: UUID;
   verifyEmail?: boolean;
   verifyEmailWhenChanged?: boolean;
-}
-
-/**
- * @author Mikey Sleevi
- */
-export interface EmailMessage {
-  attachments?: Array<Attachment>;
-  bcc?: Array<EmailAddress>;
-  cc?: Array<EmailAddress>;
-  from?: EmailAddress;
-  html?: string;
-  replyTo?: EmailAddress;
-  subject?: string;
-  text?: string;
-  to?: Array<EmailAddress>;
-}
-
-/**
- * @author Mikey Sleevi
- */
-export interface EmailMessageTemplate extends MessageTemplate {
-  defaultFromName?: string;
-  defaultHtmlTemplate?: string;
-  defaultSubject?: string;
-  defaultTextTemplate?: string;
-  fromEmail?: string;
-  localizedFromNames?: LocalizedStrings;
-  localizedHtmlTemplates?: LocalizedStrings;
-  localizedSubjects?: LocalizedStrings;
-  localizedTextTemplates?: LocalizedStrings;
-}
-
-// thinking?
-export interface EmailMessengerConfiguration extends BaseMessengerConfiguration {
-  defaultFromEmail?: string;
-  defaultFromName?: string;
-  host?: string;
-  password?: string;
-  port?: number;
-  properties?: string;
-  security?: EmailSecurityType;
-  username?: string;
 }
 
 export interface EmailPlus extends Enableable {
@@ -5851,8 +5811,7 @@ export interface MessageTemplateResponse {
  * @author Mikey Sleevi
  */
 export enum MessageType {
-  SMS = "SMS",
-  Email = "Email"
+  SMS = "SMS"
 }
 
 /**
@@ -5875,9 +5834,8 @@ export interface MessengerResponse {
  */
 export enum MessengerType {
   Generic = "Generic",
-  Twilio = "Twilio",
-  Email = "Email",
-  Kafka = "Kafka"
+  Kafka = "Kafka",
+  Twilio = "Twilio"
 }
 
 export interface MetaData {
@@ -5900,6 +5858,23 @@ export interface MinimumPasswordAge extends Enableable {
 export interface MonthlyActiveUserReportResponse {
   monthlyActiveUsers?: Array<Count>;
   total?: number;
+}
+
+export interface MultiFactorEmailTemplate {
+  templateId?: UUID;
+}
+
+export interface MultiFactorEmailTransport extends Enableable {
+  templateId?: UUID;
+}
+
+export interface MultiFactorSMSTemplate {
+  templateId?: UUID;
+}
+
+export interface MultiFactorSMSTransport extends Enableable {
+  messengerId?: UUID;
+  templateId?: UUID;
 }
 
 /**
@@ -6652,7 +6627,6 @@ export interface Tenant {
   lastUpdateInstant?: number;
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
-  messengerConfiguration?: TenantMessengerConfiguration;
   minimumPasswordAge?: MinimumPasswordAge;
   multiFactorConfiguration?: TenantMultiFactorConfiguration;
   name?: string;
@@ -6677,18 +6651,11 @@ export interface TenantFormConfiguration {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface TenantMessengerConfiguration {
-  transports?: Record<string, UUID>;
-}
-
-/**
  * @author Mikey Sleevi
  */
 export interface TenantMultiFactorConfiguration {
-  emailMessageTemplateId?: UUID;
-  smsMessageTemplateId?: UUID;
+  email?: MultiFactorEmailTransport;
+  sms?: MultiFactorSMSTransport;
 }
 
 /**
@@ -6859,6 +6826,7 @@ export interface TwoFactorLoginRequest extends BaseLoginRequest {
   code?: string;
   trustComputer?: boolean;
   twoFactorId?: string;
+  userId?: UUID;
 }
 
 /**
