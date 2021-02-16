@@ -1058,10 +1058,10 @@ export class FusionAuthClient {
    * Exchange a refresh token for a new JWT.
    *
    * @param {RefreshRequest} request The refresh request.
-   * @returns {Promise<ClientResponse<RefreshResponse>>}
+   * @returns {Promise<ClientResponse<JWTRefreshResponse>>}
    */
-  exchangeRefreshTokenForJWT(request: RefreshRequest): Promise<ClientResponse<RefreshResponse>> {
-    return this.startAnonymous<RefreshResponse, Errors>()
+  exchangeRefreshTokenForJWT(request: RefreshRequest): Promise<ClientResponse<JWTRefreshResponse>> {
+    return this.startAnonymous<JWTRefreshResponse, Errors>()
         .withUri('/api/jwt/refresh')
         .withJSONBody(request)
         .withMethod("POST")
@@ -2597,13 +2597,27 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves a single refresh token by unique Id. This is not the same thing as the string value of the refresh token, if you have that, you already have what you need..
+   *
+   * @param {UUID} userId The Id of the user.
+   * @returns {Promise<ClientResponse<RefreshTokenResponse>>}
+   */
+  retrieveRefreshTokenById(userId: UUID): Promise<ClientResponse<RefreshTokenResponse>> {
+    return this.start<RefreshTokenResponse, Errors>()
+        .withUri('/api/jwt/refresh')
+        .withUriSegment(userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the refresh tokens that belong to the user with the given Id.
    *
    * @param {UUID} userId The Id of the user.
-   * @returns {Promise<ClientResponse<RefreshResponse>>}
+   * @returns {Promise<ClientResponse<RefreshTokenResponse>>}
    */
-  retrieveRefreshTokens(userId: UUID): Promise<ClientResponse<RefreshResponse>> {
-    return this.start<RefreshResponse, Errors>()
+  retrieveRefreshTokens(userId: UUID): Promise<ClientResponse<RefreshTokenResponse>> {
+    return this.start<RefreshTokenResponse, Errors>()
         .withUri('/api/jwt/refresh')
         .withParameter('userId', userId)
         .withMethod("GET")
@@ -3981,6 +3995,7 @@ export interface ApplicationFormConfiguration {
  */
 export interface ApplicationMultiFactorConfiguration {
   email?: MultiFactorEmailTemplate;
+  required?: boolean;
   sms?: MultiFactorSMSTemplate;
 }
 
@@ -5471,6 +5486,18 @@ export interface JWTRefreshEvent extends BaseEvent {
 }
 
 /**
+ * API response for refreshing a JWT with a Refresh Token.
+ * <p>
+ * Using a different response object from RefreshTokenResponse because the retrieve response will return an object for refreshToken, and this is a string.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JWTRefreshResponse {
+  refreshToken?: string;
+  token?: string;
+}
+
+/**
  * Models the Refresh Token Revoke Event (and can be converted to JSON). This event might be for a single token, a user
  * or an entire application.
  *
@@ -5959,6 +5986,7 @@ export interface MultiFactorEmailTemplate {
 }
 
 export interface MultiFactorEmailTransport extends Enableable {
+  sendToUnverified?: boolean;
   templateId?: UUID;
 }
 
@@ -5969,6 +5997,12 @@ export interface MultiFactorSMSTemplate {
 export interface MultiFactorSMSTransport extends Enableable {
   messengerId?: UUID;
   templateId?: UUID;
+}
+
+export interface MultiFactorTOTP extends Enableable {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
 }
 
 /**
@@ -6312,9 +6346,6 @@ export interface RefreshRequest {
  * @author Daniel DeGroff
  */
 export interface RefreshResponse {
-  refreshToken?: string;
-  refreshTokens?: Array<RefreshToken>;
-  token?: string;
 }
 
 /**
@@ -6349,6 +6380,16 @@ export enum RefreshTokenExpirationPolicy {
 export interface RefreshTokenImportRequest {
   refreshTokens?: Array<RefreshToken>;
   validateDbConstraints?: boolean;
+}
+
+/**
+ * API response for retrieving Refresh Tokens
+ *
+ * @author Daniel DeGroff
+ */
+export interface RefreshTokenResponse {
+  refreshToken?: RefreshToken;
+  refreshTokens?: Array<RefreshToken>;
 }
 
 /**
@@ -6753,6 +6794,7 @@ export interface TenantFormConfiguration {
 export interface TenantMultiFactorConfiguration {
   email?: MultiFactorEmailTransport;
   sms?: MultiFactorSMSTransport;
+  totp?: MultiFactorTOTP;
 }
 
 /**
@@ -6864,6 +6906,12 @@ export interface TotalsReportResponse {
   totalGlobalRegistrations?: number;
 }
 
+export enum TOTPAlgorithm {
+  HmacSHA1 = "HmacSHA1",
+  HmacSHA256 = "HmacSHA256",
+  HmacSHA512 = "HmacSHA512"
+}
+
 /**
  * The transaction types for Webhooks and other event systems within FusionAuth.
  *
@@ -6943,6 +6991,24 @@ export interface TwoFactorSendRequest {
   mobilePhone?: string;
   secret?: string;
   userId?: UUID;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TwoFactorStartRequest {
+  applicationId?: UUID;
+  code?: string;
+  loginId?: string;
+  state?: Record<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorStartResponse {
+  code?: string;
+  twoFactorId?: string;
 }
 
 export interface UIConfiguration {
