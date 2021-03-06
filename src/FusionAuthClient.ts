@@ -6284,7 +6284,7 @@ export interface PreviewMessageTemplateRequest {
  */
 export interface PreviewMessageTemplateResponse {
   errors?: Errors;
-  message?: Message;
+  message?: SMSMessage;
 }
 
 /**
@@ -6722,6 +6722,7 @@ export interface Templates {
   emailVerify?: string;
   helpers?: string;
   index?: string;
+  multiFactorConfiguration?: string;
   oauth2Authorize?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
@@ -6988,8 +6989,10 @@ export interface TwoFactorRequest {
  * @author Daniel DeGroff
  */
 export interface TwoFactorSendRequest {
+  code?: string;
   mobilePhone?: string;
   secret?: string;
+  transport?: string;
   userId?: UUID;
 }
 
