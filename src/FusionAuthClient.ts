@@ -5986,7 +5986,6 @@ export interface MultiFactorEmailTemplate {
 }
 
 export interface MultiFactorEmailTransport extends Enableable {
-  sendToUnverified?: boolean;
   templateId?: UUID;
 }
 
@@ -6610,6 +6609,9 @@ export interface SecureIdentity {
   salt?: string;
   twoFactorDelivery?: TwoFactorDelivery;
   twoFactorEnabled?: boolean;
+  twoFactorMethods?: Array<string>;
+  twoFactorPreferredMethod?: string;
+  twoFactorRecoveryCodes?: Array<string>;
   twoFactorSecret?: string;
   username?: string;
   usernameStatus?: ContentStatus;
@@ -6734,7 +6736,7 @@ export interface Templates {
   oauth2Passwordless?: string;
   oauth2Register?: string;
   oauth2TwoFactor?: string;
-  oauth2TwoFactorOptions?: string;
+  oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
   passwordChange?: string;
   passwordComplete?: string;
@@ -6973,6 +6975,12 @@ export interface TwoFactorLoginRequest extends BaseLoginRequest {
   trustComputer?: boolean;
   twoFactorId?: string;
   userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorMethod {
 }
 
 /**
