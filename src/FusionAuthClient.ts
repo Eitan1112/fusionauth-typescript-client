@@ -5981,11 +5981,18 @@ export interface MonthlyActiveUserReportResponse {
   total?: number;
 }
 
+export interface MultiFactorAuthenticator extends Enableable {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
+}
+
 export interface MultiFactorEmailTemplate {
   templateId?: UUID;
 }
 
 export interface MultiFactorEmailTransport extends Enableable {
+  sendOnLoginWhenPreferred?: boolean;
   templateId?: UUID;
 }
 
@@ -5995,13 +6002,8 @@ export interface MultiFactorSMSTemplate {
 
 export interface MultiFactorSMSTransport extends Enableable {
   messengerId?: UUID;
+  sendOnLoginWhenPreferred?: boolean;
   templateId?: UUID;
-}
-
-export interface MultiFactorTOTP extends Enableable {
-  algorithm?: TOTPAlgorithm;
-  codeLength?: number;
-  timeStep?: number;
 }
 
 /**
@@ -6607,12 +6609,6 @@ export interface SecureIdentity {
   passwordChangeRequired?: boolean;
   passwordLastUpdateInstant?: number;
   salt?: string;
-  twoFactorDelivery?: TwoFactorDelivery;
-  twoFactorEnabled?: boolean;
-  twoFactorMethods?: Array<string>;
-  twoFactorPreferredMethod?: string;
-  twoFactorRecoveryCodes?: Array<string>;
-  twoFactorSecret?: string;
   username?: string;
   usernameStatus?: ContentStatus;
   verified?: boolean;
@@ -6725,6 +6721,8 @@ export interface Templates {
   helpers?: string;
   index?: string;
   multiFactorConfiguration?: string;
+  multiFactorConfirm?: string;
+  multiFactorSend?: string;
   oauth2Authorize?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
@@ -6795,9 +6793,9 @@ export interface TenantFormConfiguration {
  * @author Mikey Sleevi
  */
 export interface TenantMultiFactorConfiguration {
+  authenticator?: MultiFactorAuthenticator;
   email?: MultiFactorEmailTransport;
   sms?: MultiFactorSMSTransport;
-  totp?: MultiFactorTOTP;
 }
 
 /**
@@ -6988,7 +6986,7 @@ export interface TwoFactorMethod {
  */
 export interface TwoFactorRequest {
   code?: string;
-  delivery?: TwoFactorDelivery;
+  method?: string;
   secret?: string;
   secretBase32Encoded?: string;
 }
@@ -6998,9 +6996,9 @@ export interface TwoFactorRequest {
  */
 export interface TwoFactorSendRequest {
   code?: string;
+  method?: string;
   mobilePhone?: string;
   secret?: string;
-  transport?: string;
   userId?: UUID;
 }
 
@@ -7055,6 +7053,10 @@ export interface User extends SecureIdentity {
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
   timezone?: string;
+  twoFactorMethods?: Array<string>;
+  twoFactorPreferredMethod?: string;
+  twoFactorRecoveryCodes?: Array<string>;
+  twoFactorSecret?: string;
 }
 
 /**
