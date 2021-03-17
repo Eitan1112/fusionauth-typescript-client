@@ -7000,7 +7000,6 @@ export interface TwoFactorSendRequest {
   code?: string;
   method?: string;
   mobilePhone?: string;
-  secret?: string;
   userId?: UUID;
 }
 
