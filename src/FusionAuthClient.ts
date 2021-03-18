@@ -6717,14 +6717,15 @@ export interface SystemLogsExportRequest extends BaseExportRequest {
 export interface Templates {
   accountEdit?: string;
   accountIndex?: string;
+  accountTwoFactorDisable?: string;
+  accountTwoFactorEnable?: string;
+  accountTwoFactorIndex?: string;
+  accountTwoFactorSend?: string;
   emailComplete?: string;
   emailSend?: string;
   emailVerify?: string;
   helpers?: string;
   index?: string;
-  multiFactorConfiguration?: string;
-  multiFactorConfirm?: string;
-  multiFactorSend?: string;
   oauth2Authorize?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
