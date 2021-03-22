@@ -3329,12 +3329,30 @@ export class FusionAuthClient {
    *
    * @param {string} twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
    * @returns {Promise<ClientResponse<void>>}
+   *
+   * @deprecated This method has been renamed to sendTwoFactorCodeForLoginWithMethod, use that method instead.
    */
   sendTwoFactorCodeForLogin(twoFactorId: string): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/two-factor/send')
         .withUriSegment(twoFactorId)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Send a Two Factor authentication code to allow the completion of Two Factor authentication.
+   *
+   * @param {string} twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
+   * @param {TwoFactorSendRequest} request The Two Factor send request that contains all of the information used to send the Two Factor code to the user.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  sendTwoFactorCodeForLoginWithMethod(twoFactorId: string, request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, Errors>()
+        .withUri('/api/two-factor/send')
+        .withUriSegment(twoFactorId)
+        .withJSONBody(request)
         .withMethod("POST")
         .go();
   }
