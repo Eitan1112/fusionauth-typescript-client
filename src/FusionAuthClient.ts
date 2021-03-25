@@ -1164,6 +1164,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Generate two-factor recovery codes for a user. Generating two-factor recovery codes will invalidate any existing recovery codes. 
+   *
+   * @param {UUID} userId The Id of the user to generate new Two Factor recovery codes.
+   * @returns {Promise<ClientResponse<RecoveryCodeResponse>>}
+   */
+  generateTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<RecoveryCodeResponse>> {
+    return this.start<RecoveryCodeResponse, Errors>()
+        .withHeader('Content-Type', 'text/plain')
+        .withUri('/api/user/two-factor/recovery-code')
+        .withUriSegment(userId)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Generate a Two Factor secret that can be used to enable Two Factor authentication for a User. The response will contain
    * both the secret and a Base32 encoded form of the secret which can be shown to a User when using a 2 Step Authentication
    * application such as Google Authenticator.
@@ -2734,6 +2749,20 @@ export class FusionAuthClient {
   retrieveTotalReport(): Promise<ClientResponse<TotalsReportResponse>> {
     return this.start<TotalsReportResponse, void>()
         .withUri('/api/report/totals')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieve two-factor recovery codes for a user.
+   *
+   * @param {UUID} userId The Id of the user to retrieve Two Factor recovery codes.
+   * @returns {Promise<ClientResponse<RecoveryCodeResponse>>}
+   */
+  retrieveTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<RecoveryCodeResponse>> {
+    return this.start<RecoveryCodeResponse, Errors>()
+        .withUri('/api/user/two-factor/recovery-code')
+        .withUriSegment(userId)
         .withMethod("GET")
         .go();
   }
@@ -6001,28 +6030,28 @@ export interface MonthlyActiveUserReportResponse {
   total?: number;
 }
 
-export interface MultiFactorAuthenticator extends Enableable {
+export interface MultiFactorAuthenticatorMethod extends Enableable {
   algorithm?: TOTPAlgorithm;
   codeLength?: number;
   timeStep?: number;
+}
+
+export interface MultiFactorEmailMethod extends Enableable {
+  sendFirstCodeWithoutPrompt?: boolean;
+  templateId?: UUID;
 }
 
 export interface MultiFactorEmailTemplate {
   templateId?: UUID;
 }
 
-export interface MultiFactorEmailTransport extends Enableable {
-  sendOnLoginWhenPreferred?: boolean;
+export interface MultiFactorSMSMethod extends Enableable {
+  messengerId?: UUID;
+  sendFirstCodeWithoutPrompt?: boolean;
   templateId?: UUID;
 }
 
 export interface MultiFactorSMSTemplate {
-  templateId?: UUID;
-}
-
-export interface MultiFactorSMSTransport extends Enableable {
-  messengerId?: UUID;
-  sendOnLoginWhenPreferred?: boolean;
   templateId?: UUID;
 }
 
@@ -6353,6 +6382,13 @@ export interface RawLogin {
  */
 export interface RecentLoginResponse {
   logins?: Array<DisplayableRawLogin>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RecoveryCodeResponse {
+  recoveryCodes?: Array<string>;
 }
 
 /**
@@ -6814,9 +6850,9 @@ export interface TenantFormConfiguration {
  * @author Mikey Sleevi
  */
 export interface TenantMultiFactorConfiguration {
-  authenticator?: MultiFactorAuthenticator;
-  email?: MultiFactorEmailTransport;
-  sms?: MultiFactorSMSTransport;
+  authenticator?: MultiFactorAuthenticatorMethod;
+  email?: MultiFactorEmailMethod;
+  sms?: MultiFactorSMSMethod;
 }
 
 /**
@@ -7065,6 +7101,7 @@ export interface User extends SecureIdentity {
   insertInstant?: number;
   lastName?: string;
   lastUpdateInstant?: number;
+  lastUsedTwoFactorMethod?: string;
   memberships?: Array<GroupMember>;
   middleName?: string;
   mobilePhone?: string;
@@ -7074,7 +7111,6 @@ export interface User extends SecureIdentity {
   tenantId?: UUID;
   timezone?: string;
   twoFactorMethods?: Array<string>;
-  twoFactorPreferredMethod?: string;
   twoFactorRecoveryCodes?: Array<string>;
   twoFactorSecret?: string;
 }
