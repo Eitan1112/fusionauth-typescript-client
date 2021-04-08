@@ -4178,6 +4178,15 @@ export interface AuditLogSearchResponse {
 export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface AuthenticatorConfiguration {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
+}
+
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseConnectorConfiguration {
   data?: Record<string, any>;
@@ -6774,7 +6783,6 @@ export interface Templates {
   accountTwoFactorDisable?: string;
   accountTwoFactorEnable?: string;
   accountTwoFactorIndex?: string;
-  accountTwoFactorSend?: string;
   emailComplete?: string;
   emailSend?: string;
   emailVerify?: string;
@@ -7016,6 +7024,7 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 
 /**
  * @author Daniel DeGroff
+ * @deprecated Use <code>User.twoFactor.methods</code>
  */
 export enum TwoFactorDelivery {
   None = "None",
@@ -7036,6 +7045,10 @@ export interface TwoFactorLoginRequest extends BaseLoginRequest {
  * @author Daniel DeGroff
  */
 export interface TwoFactorMethod {
+  authenticator?: AuthenticatorConfiguration;
+  id?: string;
+  method?: string;
+  secret?: string;
 }
 
 /**
@@ -7043,7 +7056,10 @@ export interface TwoFactorMethod {
  */
 export interface TwoFactorRequest {
   code?: string;
+  email?: string;
   method?: string;
+  mobilePhone?: string;
+  name?: string;
   secret?: string;
   secretBase32Encoded?: string;
 }
@@ -7101,7 +7117,6 @@ export interface User extends SecureIdentity {
   insertInstant?: number;
   lastName?: string;
   lastUpdateInstant?: number;
-  lastUsedTwoFactorMethod?: string;
   memberships?: Array<GroupMember>;
   middleName?: string;
   mobilePhone?: string;
@@ -7110,9 +7125,7 @@ export interface User extends SecureIdentity {
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
   timezone?: string;
-  twoFactorMethods?: Array<string>;
-  twoFactorRecoveryCodes?: Array<string>;
-  twoFactorSecret?: string;
+  twoFactor?: UserTwoFactorConfiguration;
 }
 
 /**
@@ -7567,6 +7580,15 @@ export interface UserSearchCriteria extends BaseSearchCriteria {
 export enum UserState {
   Authenticated = "Authenticated",
   AuthenticatedNotRegistered = "AuthenticatedNotRegistered"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorConfiguration {
+  lastUsed?: string;
+  methods?: Array<TwoFactorMethod>;
+  recoveryCodes?: Array<string>;
 }
 
 /**
