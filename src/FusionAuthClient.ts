@@ -947,16 +947,82 @@ export class FusionAuthClient {
    * Disable Two Factor authentication for a user.
    *
    * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {string} authenticatorId The Two Factor code used verify the the caller knows the Two Factor secret.
    * @param {string} code The Two Factor code used verify the the caller knows the Two Factor secret.
    * @param {string} method The Two Factor method used to verify the code.
    * @returns {Promise<ClientResponse<void>>}
    */
-  disableTwoFactor(userId: UUID, code: string, method: string): Promise<ClientResponse<void>> {
+  disableAuthenticatorTwoFactor(userId: UUID, authenticatorId: string, code: string, method: string): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/two-factor')
         .withParameter('userId', userId)
+        .withParameter('authenticatorId', authenticatorId)
         .withParameter('code', code)
         .withParameter('method', method)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Disable Two Factor authentication for a user.
+   *
+   * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {string} email The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @param {string} method The Two Factor method used to verify the code.
+   * @param {string} code The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  disableEmailTwoFactor(userId: UUID, email: string, method: string, code: string): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/two-factor')
+        .withParameter('userId', userId)
+        .withParameter('email', email)
+        .withParameter('method', method)
+        .withParameter('code', code)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Disable Two Factor authentication for a user.
+   *
+   * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {string} mobilePhone The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @param {string} method The Two Factor method used to verify the code.
+   * @param {string} code The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  disableSMSTwoFactor(userId: UUID, mobilePhone: string, method: string, code: string): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/two-factor')
+        .withParameter('userId', userId)
+        .withParameter('mobilePhone', mobilePhone)
+        .withParameter('method', method)
+        .withParameter('code', code)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Disable Two Factor authentication for a user.
+   *
+   * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {string} authenticatorId The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @param {string} email The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @param {string} mobilePhone The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @param {string} method The Two Factor method used to verify the code.
+   * @param {string} code The Two Factor code used verify the the caller knows the Two Factor secret.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  disableTwoFactor(userId: UUID, authenticatorId: string, email: string, mobilePhone: string, method: string, code: string): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/two-factor')
+        .withParameter('userId', userId)
+        .withParameter('authenticatorId', authenticatorId)
+        .withParameter('email', email)
+        .withParameter('mobilePhone', mobilePhone)
+        .withParameter('method', method)
+        .withParameter('code', code)
         .withMethod("DELETE")
         .go();
   }
@@ -7055,11 +7121,11 @@ export interface TwoFactorMethod {
  * @author Brian Pontarelli
  */
 export interface TwoFactorRequest {
+  authenticatorId?: string;
   code?: string;
   email?: string;
   method?: string;
   mobilePhone?: string;
-  name?: string;
   secret?: string;
   secretBase32Encoded?: string;
 }
@@ -7586,7 +7652,8 @@ export enum UserState {
  * @author Daniel DeGroff
  */
 export interface UserTwoFactorConfiguration {
-  lastUsed?: string;
+  lastUsedId?: string;
+  lastUsedMethod?: string;
   methods?: Array<TwoFactorMethod>;
   recoveryCodes?: Array<string>;
 }
