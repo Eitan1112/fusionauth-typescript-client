@@ -7074,6 +7074,7 @@ export interface TwoFactorSendRequest {
   code?: string;
   email?: string;
   method?: string;
+  methodId?: string;
   mobilePhone?: string;
   userId?: UUID;
 }
