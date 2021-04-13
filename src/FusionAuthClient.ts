@@ -3344,8 +3344,24 @@ export class FusionAuthClient {
    *
    * @param {TwoFactorSendRequest} request The request object that contains all of the information used to send the code.
    * @returns {Promise<ClientResponse<void>>}
+   *
+   * @deprecated This method has been renamed to sendTwoFactorCodeForEnableDisable, use that method instead.
    */
   sendTwoFactorCode(request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/two-factor/send')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
+   *
+   * @param {TwoFactorSendRequest} request The request object that contains all of the information used to send the code.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  sendTwoFactorCodeForEnableDisable(request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/two-factor/send')
         .withJSONBody(request)
@@ -3359,7 +3375,7 @@ export class FusionAuthClient {
    * @param {string} twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
    * @returns {Promise<ClientResponse<void>>}
    *
-   * @deprecated This method has been renamed to sendTwoFactorCodeForLoginWithMethod, use that method instead.
+   * @deprecated This method has been renamed to sendTwoFactorCodeForLoginUsingMethod, use that method instead.
    */
   sendTwoFactorCodeForLogin(twoFactorId: string): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
@@ -3377,7 +3393,7 @@ export class FusionAuthClient {
    * @param {TwoFactorSendRequest} request The Two Factor send request that contains all of the information used to send the Two Factor code to the user.
    * @returns {Promise<ClientResponse<void>>}
    */
-  sendTwoFactorCodeForLoginWithMethod(twoFactorId: string, request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
+  sendTwoFactorCodeForLoginUsingMethod(twoFactorId: string, request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
         .withUri('/api/two-factor/send')
         .withUriSegment(twoFactorId)
@@ -7029,6 +7045,16 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 export enum TwoFactorDelivery {
   None = "None",
   TextMessage = "TextMessage"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorEnableDisableSendRequest {
+  email?: string;
+  method?: string;
+  methodId?: string;
+  mobilePhone?: string;
 }
 
 /**
