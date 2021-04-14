@@ -4060,7 +4060,6 @@ export interface ApplicationFormConfiguration {
  */
 export interface ApplicationMultiFactorConfiguration {
   email?: MultiFactorEmailTemplate;
-  required?: boolean;
   sms?: MultiFactorSMSTemplate;
 }
 
@@ -5907,6 +5906,7 @@ export interface LoginResponse {
   actions?: Array<LoginPreventedResponse>;
   changePasswordId?: string;
   changePasswordReason?: ChangePasswordReason;
+  methods?: Array<TwoFactorMethod>;
   refreshToken?: string;
   state?: Record<string, any>;
   token?: string;
@@ -6062,7 +6062,6 @@ export interface MultiFactorAuthenticatorMethod extends Enableable {
 }
 
 export interface MultiFactorEmailMethod extends Enableable {
-  sendFirstCodeWithoutPrompt?: boolean;
   templateId?: UUID;
 }
 
@@ -6072,7 +6071,6 @@ export interface MultiFactorEmailTemplate {
 
 export interface MultiFactorSMSMethod extends Enableable {
   messengerId?: UUID;
-  sendFirstCodeWithoutPrompt?: boolean;
   templateId?: UUID;
 }
 
@@ -7120,6 +7118,7 @@ export interface TwoFactorStartRequest {
  */
 export interface TwoFactorStartResponse {
   code?: string;
+  methods?: Array<TwoFactorMethod>;
   twoFactorId?: string;
 }
 
