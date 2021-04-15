@@ -3433,6 +3433,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Start a Two-Factor login request by generating a two-factor identifier. This code can then be sent to the Two Factor Send 
+   * API (/api/two-factor/send)in order to send a one-time use code to a user. You can also use one-time use code returned 
+   * to send the code out-of-band. The Two-Factor login is completed by making a request to the Two-Factor Login 
+   * API (/api/two-factor/login). with the two-factor identifier and the one-time use code.
+   * 
+   * This API is intended to allow you to begin a Two-Factor login outside of a normal login that originated from the Login API (/api/login).
+   *
+   * @param {TwoFactorStartRequest} request The Two-Factor start request that contains all of the information used to begin the Two-Factor login request.
+   * @returns {Promise<ClientResponse<TwoFactorStartResponse>>}
+   */
+  startTwoFactorLogin(request: TwoFactorStartRequest): Promise<ClientResponse<TwoFactorStartResponse>> {
+    return this.start<TwoFactorStartResponse, Errors>()
+        .withUri('/api/two-factor/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Complete login using a 2FA challenge
    *
    * @param {TwoFactorLoginRequest} request The login request that contains the user credentials used to log them in.
@@ -7095,7 +7114,6 @@ export interface TwoFactorRequest {
  * @author Daniel DeGroff
  */
 export interface TwoFactorSendRequest {
-  code?: string;
   email?: string;
   method?: string;
   methodId?: string;
