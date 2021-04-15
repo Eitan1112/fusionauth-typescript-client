@@ -966,10 +966,10 @@ export class FusionAuthClient {
    *
    * @param {UUID} userId The Id of the user to enable Two Factor authentication.
    * @param {TwoFactorRequest} request The two factor enable request information.
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<TwoFactorResponse>>}
    */
-  enableTwoFactor(userId: UUID, request: TwoFactorRequest): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+  enableTwoFactor(userId: UUID, request: TwoFactorRequest): Promise<ClientResponse<TwoFactorResponse>> {
+    return this.start<TwoFactorResponse, Errors>()
         .withUri('/api/user/two-factor')
         .withUriSegment(userId)
         .withJSONBody(request)
@@ -7108,6 +7108,13 @@ export interface TwoFactorRequest {
   mobilePhone?: string;
   secret?: string;
   secretBase32Encoded?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorResponse {
+  recoveryCodes?: Array<string>;
 }
 
 /**
