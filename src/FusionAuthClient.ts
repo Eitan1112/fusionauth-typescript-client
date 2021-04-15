@@ -1167,10 +1167,10 @@ export class FusionAuthClient {
    * Generate two-factor recovery codes for a user. Generating two-factor recovery codes will invalidate any existing recovery codes. 
    *
    * @param {UUID} userId The Id of the user to generate new Two Factor recovery codes.
-   * @returns {Promise<ClientResponse<RecoveryCodeResponse>>}
+   * @returns {Promise<ClientResponse<TwoFactorRecoveryCodeResponse>>}
    */
-  generateTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<RecoveryCodeResponse>> {
-    return this.start<RecoveryCodeResponse, Errors>()
+  generateTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<TwoFactorRecoveryCodeResponse>> {
+    return this.start<TwoFactorRecoveryCodeResponse, Errors>()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/user/two-factor/recovery-code')
         .withUriSegment(userId)
@@ -2757,10 +2757,10 @@ export class FusionAuthClient {
    * Retrieve two-factor recovery codes for a user.
    *
    * @param {UUID} userId The Id of the user to retrieve Two Factor recovery codes.
-   * @returns {Promise<ClientResponse<RecoveryCodeResponse>>}
+   * @returns {Promise<ClientResponse<TwoFactorRecoveryCodeResponse>>}
    */
-  retrieveTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<RecoveryCodeResponse>> {
-    return this.start<RecoveryCodeResponse, Errors>()
+  retrieveTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<TwoFactorRecoveryCodeResponse>> {
+    return this.start<TwoFactorRecoveryCodeResponse, Errors>()
         .withUri('/api/user/two-factor/recovery-code')
         .withUriSegment(userId)
         .withMethod("GET")
@@ -6429,13 +6429,6 @@ export interface RecentLoginResponse {
 /**
  * @author Daniel DeGroff
  */
-export interface RecoveryCodeResponse {
-  recoveryCodes?: Array<string>;
-}
-
-/**
- * @author Daniel DeGroff
- */
 export interface RefreshRequest {
   refreshToken?: string;
   token?: string;
@@ -7095,6 +7088,13 @@ export interface TwoFactorMethod {
   method?: string;
   mobilePhone?: string;
   secret?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorRecoveryCodeResponse {
+  recoveryCodes?: Array<string>;
 }
 
 /**
